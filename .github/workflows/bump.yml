@@ -16,9 +16,8 @@ jobs:
   bump-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
+      - name: Make Commit
         uses: actions/checkout@v3
-      - name: Make a bump commit and create a version variable
       - run: |
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
