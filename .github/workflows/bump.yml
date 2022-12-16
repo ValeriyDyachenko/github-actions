@@ -21,7 +21,7 @@ jobs:
       - run: |
           git config user.name "$(git log -n 1 --pretty=format:%an)"
           git config user.email "$(git log -n 1 --pretty=format:%ae)"
-          version=$(npm version ${{ inputs.bumpType }} -m "Release version %s")
+          version=$(npm version ${{ inputs.bumpType }} -m "Release version %s":1)
           echo "current_version=${version}" >> $GITHUB_ENV
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
