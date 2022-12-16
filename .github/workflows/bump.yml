@@ -35,18 +35,17 @@ jobs:
         with:
           title: Release version ${{ env.current_version }}
           delete-branch: true
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve Pull Request
         uses: juliangruber/approve-pull-request-action@v2.0.0
         with:
           number: ${{ steps.create-pr.outputs.pull-request-number }}
-          github-token: ${{ secrets.AUTOMERGE_APPROVER }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Pull Request
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: 1
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
           method: squash
           repo: juliangruber/octokit-action
