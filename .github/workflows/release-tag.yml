@@ -1,0 +1,49 @@
+name: Create Release Tag
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Tag Type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - prerelease
+      product:
+        description: 'Product'
+        required: true
+        default: ''
+        type: choice
+        options:
+          - ''
+          - FOO
+          - BAR
+      additionalDescription:
+        description: 'Additional Description if needed (i.e. revert-pdfjs)'
+        type: string
+      date:
+        description: 'Date yyyy-mm-dd (by default will be used currently date)'
+        type: string
+
+jobs:
+  release-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate tag name
+        run: |
+          version=$(cat package.json | jq -r '.version')
+          date=${{ inputs.date  }}
+          : ${date:=$(date +'%Y-%m-%d')}
+          description=${{  inputs.additionalDescription  }}
+          description=${description:+-$description}
+          tag="${{  inputs.type  }}/$version/${{  inputs.product  }}/$date$description"
+          echo "tagName=${tag}" >> $GITHUB_ENV
+
+      - name: Push git tag
+        run: |
+          git tag ${{  env.tagName  }}
+          git push origin ${{  env.tagName  }}
